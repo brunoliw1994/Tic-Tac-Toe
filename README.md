@@ -20,8 +20,8 @@ Libraries used: System
 
 * [YouTube - C# Tutorial – Create a Tic Tac Toe game and play against CPU](https://www.youtube.com/watch?v=205ZVRsyXVo)
 * [YouTube - Programming a Tic-Tac-Toe Game in C# - Full Guide](https://www.youtube.com/watch?v=OHRWRpT9WcE)
-* [C# Corner](https://www.c-sharpcorner.com/UploadFile/75a48f/tic-tac-toe-game-in-C-Sharp/)
-* [Stack Overflow](https://stackoverflow.com/questions/73102094/trouble-writing-tic-tac-toe-game-in-c-sharp)
+* [C# Corner - Tic-Tac-Toe Game in C#](https://www.c-sharpcorner.com/UploadFile/75a48f/tic-tac-toe-game-in-C-Sharp/)
+* [Stack Overflow - Trouble writing Tic Tac Toe game in C#](https://stackoverflow.com/questions/73102094/trouble-writing-tic-tac-toe-game-in-c-sharp)
 
 
 # Future Work
