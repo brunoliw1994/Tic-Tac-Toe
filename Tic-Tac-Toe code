@@ -1,0 +1,162 @@
+using System; 
+
+namespace TicTacToeGame 
+{
+        struct Player
+    {
+        public string Name; // Stores the player's name
+        public char Symbol; // Stores the player's symbol ('X' or 'O')
+
+        // Constructor that initializes the player's name and symbol
+        public Player(string name, char symbol)
+        {
+            Name = name; // Assigns the name to the Name field
+            Symbol = symbol; // Assigns the symbol to the Symbol field
+        }
+    }
+
+    abstract class Game
+    {
+        protected char[,] Board; // Declares a 2D array for the game board
+        protected Player Player1; // Declares Player1 as a Player struct
+        protected Player Player2; // Declares Player2 as a Player struct
+        protected int Moves; // Tracks the number of moves made in the game
+
+        // Constructor that initializes the game board
+        public Game()
+        {
+            Board = new char[3, 3]; // Creates a 3x3 board
+            ResetBoard(); // Resets the board to its initial state
+        }
+
+        public abstract void PlayGame(); // Declares an abstract method for playing the game
+
+        // Resets the game board to an empty state
+        protected void ResetBoard()
+        {
+            for (int i = 0; i < 3; i++) // Iterates over the rows
+                for (int j = 0; j < 3; j++) // Iterates over the columns
+                    Board[i, j] = ' '; // Sets each cell of the board to a space
+        }
+
+        // Displays the current state of the game board in the console
+        protected void DisplayBoard()
+        {
+            Console.Clear(); // Clears the console to update the display
+            Console.WriteLine("  0   1   2"); // Prints the column headers
+            Console.WriteLine("0 {0} | {1} | {2}", Board[0, 0], Board[0, 1], Board[0, 2]); // Prints row 0
+            Console.WriteLine("  ---------"); // Prints a row divider
+            Console.WriteLine("1 {0} | {1} | {2}", Board[1, 0], Board[1, 1], Board[1, 2]); // Prints row 1
+            Console.WriteLine("  ---------"); // Prints a row divider
+            Console.WriteLine("2 {0} | {1} | {2}", Board[2, 0], Board[2, 1], Board[2, 2]); // Prints row 2
+        }
+
+        // Checks if a move is valid by ensuring the coordinates are in range and the cell is empty
+        protected bool IsValidMove(int row, int col)
+        {
+            return row >= 0 && row < 3 && col >= 0 && col < 3 && Board[row, col] == ' '; // Returns true if the move is valid
+        }
+
+        // Checks if a player has won the game
+        protected bool CheckWin(char symbol)
+        {
+            // Checks rows and columns for a win
+            for (int i = 0; i < 3; i++)
+            {
+                if ((Board[i, 0] == symbol && Board[i, 1] == symbol && Board[i, 2] == symbol) || // Checks row i
+                    (Board[0, i] == symbol && Board[1, i] == symbol && Board[2, i] == symbol)) // Checks column i
+                    return true; // Returns true if a win is found
+            }
+
+            // Checks diagonals for a win
+            return (Board[0, 0] == symbol && Board[1, 1] == symbol && Board[2, 2] == symbol) || // Checks the main diagonal
+                   (Board[0, 2] == symbol && Board[1, 1] == symbol && Board[2, 0] == symbol); // Checks the anti-diagonal
+        }
+
+        // Checks if the board is full and the game is a draw
+        protected bool IsBoardFull()
+        {
+            return Moves >= 9; // Returns true if 9 moves have been made
+        }
+    }
+
+    // Implements the game logic for Tic-Tac-Toe by extending the Game class
+    class TicTacToe : Game
+    {
+        // Constructor that initializes the players
+        public TicTacToe(string player1Name, string player2Name)
+        {
+            Player1 = new Player(player1Name, 'X'); // Assigns Player1's name and symbol
+            Player2 = new Player(player2Name, 'O'); // Assigns Player2's name and symbol
+        }
+
+        // Implements the game loop and logic for playing Tic-Tac-Toe
+        public override void PlayGame()
+        {
+            Moves = 0; // Resets the move counter
+            ResetBoard(); // Resets the board
+            Player currentPlayer = Player1; // Sets the first player as the current player
+
+            while (true) // Runs the game loop
+            {
+                DisplayBoard(); // Displays the current state of the board
+                Console.WriteLine($"{currentPlayer.Name}'s Turn ({currentPlayer.Symbol})"); // Prompts the current player
+
+                int row, col; // Declares variables for the move coordinates
+                while (true) // Loops until a valid move is entered
+                {
+                    Console.Write("Enter row (0-2): "); // Asks for the row
+                    row = int.Parse(Console.ReadLine() ?? "0"); // Reads and parses the row input
+                    Console.Write("Enter column (0-2): "); // Asks for the column
+                    col = int.Parse(Console.ReadLine() ?? "0"); // Reads and parses the column input
+
+                    if (IsValidMove(row, col)) // Checks if the move is valid
+                        break; // Exits the loop if the move is valid
+
+                    Console.WriteLine("Invalid move! Try again."); // Prompts the user to try again
+                }
+
+                // Updates the board with the player's move
+                Board[row, col] = currentPlayer.Symbol;
+                Moves++; // Increments the move counter
+
+                // Checks if the current player has won
+                if (CheckWin(currentPlayer.Symbol))
+                {
+                    DisplayBoard(); // Displays the final board state
+                    Console.WriteLine($"{currentPlayer.Name} wins!"); // Announces the winner
+                    break; // Exits the game loop
+                }
+
+                // Checks if the game is a draw
+                if (IsBoardFull())
+                {
+                    DisplayBoard(); // Displays the final board state
+                    Console.WriteLine("The game is a draw!"); // Announces a draw
+                    break; // Exits the game loop
+                }
+
+                // Switches to the other player
+                currentPlayer = currentPlayer.Symbol == Player1.Symbol ? Player2 : Player1;
+            }
+        }
+    }
+
+    // Main program class that runs the game
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Welcome to Tic-Tac-Toe!"); // Greets the user
+            Console.Write("Enter Player 1 Name: "); // Asks for Player 1's name
+            string player1Name = Console.ReadLine(); // Reads Player 1's name
+            Console.Write("Enter Player 2 Name: "); // Asks for Player 2's name
+            string player2Name = Console.ReadLine(); // Reads Player 2's name
+
+            TicTacToe game = new TicTacToe(player1Name, player2Name); // Creates a new Tic-Tac-Toe game instance
+            game.PlayGame(); // Starts the game
+
+            Console.WriteLine("Game Over! Thanks for playing."); // Thanks the players
+        }
+    }
+}
